@@ -25,7 +25,7 @@ The `sample_project/` directory contains Python source files with 13 TODO commen
 ├── shared_tools.py          # Tool implementations shared by all three agents
 ├── pydanticai/              # Implicit loop (framework manages everything)
 ├── openai-agents/           # Semi-explicit loop (structured turn classification)
-└── langgraph/               # Fully explicit loop (graph-based control flow)
+└── langgraph/               # Fully explicit loop (basic + compression variant)
 ```
 
 ## Shared Tools
@@ -85,6 +85,18 @@ uv run python langgraph/agent.py
 
 The loop is a directed cyclic graph you define yourself. Nodes are functions, edges are routing decisions, and the cycle is the loop.
 
+### LangGraph with Context Compression
+
+Extended version that handles large directories (200+ files) by compressing context every 20 file reads. Demonstrates state-based accumulation, message trimming, and checkpointing.
+
+```bash
+# Run against the sample project (works the same as basic)
+uv run python langgraph/agent_with_compression.py
+
+# Run against a larger directory to see compression in action
+uv run python langgraph/agent_with_compression.py /path/to/large/project
+```
+
 ## The Abstraction Spectrum
 
 | Aspect                | Pydantic AI              | OpenAI Agents SDK          | LangGraph                   |
@@ -121,10 +133,6 @@ Total TODOs found: 13
 
 ...
 ```
-
-## Scaling: Context Compression
-
-The blog post includes a fourth variation showing how to add context compression to the LangGraph agent for scanning 200+ files. That example adds a compression node to the graph, demonstrating mid-loop intervention — one of the key advantages of explicit control flow. See [the blog post](https://cuttlesoft.com/blog/2026/04/14/the-agent-loop-one-pattern-three-frameworks/) for the annotated walkthrough.
 
 ## ⚖️ License
 
